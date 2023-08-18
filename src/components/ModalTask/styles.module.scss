@@ -92,12 +92,46 @@
     background: var(--color-secondary);
     border: none;
     transition: all 0.2s ease-in-out;
+    padding: 6px 12px;
     &:hover {
       filter: var(--hover-brightness);
       transition: all 0.2s ease-in-out;
     }
   }
 }
+
+// .resizable_input {
+//   /* make resizable */
+//   overflow-x: hidden;
+//   resize: both;
+//   display: inline-block;
+
+//   /* no extra spaces */
+//   padding: 0;
+//   margin: 0;
+//   white-space: nowrap;
+
+//   /* default widths */
+//   width: 10em;
+//   min-width: 2em;
+//   max-width: 30em;
+// }
+
+// .resizable_input > input {
+//   width: 100%;
+//   box-sizing: border-box;
+//   margin: 0;
+// }
+
+// .resizable_input::after {
+//   display: inline-block;
+//   vertical-align: bottom;
+//   margin-left: -16px;
+//   width: 16px;
+//   height: 16px;
+//   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
+//   cursor: ew-resize;
+// }
 
 .task_description_container {
   padding-top: 1.87rem;
@@ -120,7 +154,9 @@
     border-radius: 0.5rem;
     background: var(--color-secondary);
     border: none;
+    resize: vertical;
     transition: all 0.2s ease-in-out;
+    padding: 6px 12px;
     &:hover {
       filter: var(--hover-brightness);
       transition: all 0.2s ease-in-out;

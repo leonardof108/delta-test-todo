@@ -7,12 +7,12 @@
   // "task3 task3";
   margin-top: 43px;
   transition: all 0.2s ease-in-out;
-  @media (max-width: 900px) {
+  @media (max-width: 1000px) {
     grid-template-areas:
-      "task1 task2 "
-      "task3 task3";
+      "task1 task1 "
+      "task2 task3";
   }
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
     grid-template-areas:
       "task1"
       "task2"
@@ -22,21 +22,20 @@
 
 .kpi {
   display: flex;
-  min-width: 245px;
-  padding: 24px;
+  min-width: 17.125rem;
+  height: 6.1875rem;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
   align-items: center;
+  border-radius: 0.5rem;
   background: var(--color-secondary);
-  border-radius: 8px;
   transition: all 0.2s ease-in-out;
   &:hover {
     filter: var(--hover-brightness);
     transition: all 0.2s ease-in-out;
   }
   h3 {
-    color: var(--blue-300, #2d9cdb);
+    color: #2d9cdb;
     font-size: 2rem;
     font-style: normal;
     font-weight: 700;

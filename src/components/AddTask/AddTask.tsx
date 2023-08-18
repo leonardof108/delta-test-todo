@@ -5,8 +5,6 @@ import { Plus } from "../../../public/assets/icons";
 
 export default function AddTask() {
   const [openModal, setOpenModal] = useState("");
-
-  console.log(openModal);
   return (
     <>
       <div className={styles.add_task_container}>

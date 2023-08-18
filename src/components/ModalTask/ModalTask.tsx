@@ -1,12 +1,52 @@
 import styles from "./styles.module.scss";
 import { Close, Delete, Plus, Resize } from "@/../public/assets/icons";
+import {
+  ChangeEvent,
+  MouseEvent,
+  ChangeEventHandler,
+  useState,
+  useEffect,
+} from "react";
 
 interface modalProps {
   open: string;
   close: () => void;
+  taskData: any;
 }
 
-export default function ModalTask({ open, close }: modalProps) {
+interface taskListProps {
+  title: string;
+  description: string;
+}
+
+export default function ModalTask({ open, close, taskData }: modalProps) {
+  const [titleInput, setTitleInput] = useState<string>("");
+  const [descriptionInput, setDescriptionInput] = useState<string>("");
+  const [taskList, setTaskList] = useState<taskListProps[]>([
+    {
+      title: "",
+      description: "",
+    },
+  ]);
+
+  const titleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setTitleInput(e.target.value);
+  };
+
+  const descriptionChange = (e: ChangeEventHandler<HTMLTextAreaElement>) => {
+    e.preventDefault();
+    setDescriptionInput(e.target.value);
+  };
+
+  const taskSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const newTask = { title: titleInput, description: descriptionInput };
+    const updatedTaskList = [...taskList, newTask];
+    setTaskList(updatedTaskList);
+    taskData(updatedTaskList);
+  };
+
   if (!open) {
     return null;
   }
@@ -20,13 +60,15 @@ export default function ModalTask({ open, close }: modalProps) {
           <h1>Cadastrar Tarefa</h1>
           <form className={styles.task_name_container}>
             <label>Nome da tarefa:</label>
-            <input type="text" />
+            <input type="text" onChange={titleChange} />
           </form>
           <form className={styles.task_description_container}>
             <label>Descrição da tarefa:</label>
             {/* <div className={styles.textarea_wrapper}> */}
             {/* <Resize /> */}
-            <textarea />
+            {/* <span className={styles.resizable_input}> */}
+            <textarea type="text" onChange={descriptionChange} />
+            {/* </span> */}
             {/* </div> */}
           </form>
           <div className={styles.task_button_container}>
@@ -37,7 +79,11 @@ export default function ModalTask({ open, close }: modalProps) {
             >
               <p>Cancelar</p>
             </button>
-            <button type="button" className={styles.task_action_button}>
+            <button
+              type="button"
+              className={styles.task_action_button}
+              onClick={taskSubmit}
+            >
               <Plus />
               <p>Adicionar tarefa</p>
             </button>
