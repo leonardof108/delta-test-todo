@@ -18,6 +18,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "public/assets/icons.js",
+    "src/components/DarkMode/DarkMode.tsx"
+  ],
   "exclude": ["node_modules"]
 }

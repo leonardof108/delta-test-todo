@@ -1,4 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
+  --color-primary: #ffffff;
+  --color-secondary: #f2f2f2;
+  --color-accent: #f2f2f2;
+  --color-faded: #e0e0e0;
+  --font-primary: #1d1d1d;
+  --font-secondary: #828282;
+  --font-faded: #bdbdbd;
+  --logo: #121e3a;
+  --hover-brightness: brightness(95%);
+}
+
+[data-theme="dark"] {
+  --color-primary: #1d1d1d;
+  --color-secondary: #343434;
+  --color-accent: #1b1b1b;
+  --color-faded: #343434;
+  --font-primary: #ffffff;
+  --font-secondary: #bdbdbd;
+  --font-faded: #828282;
+  --logo: #ffffff;
+  --hover-brightness: brightness(105%);
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-primary);
+  font-family: "Poppins", sans-serif;
+  margin: 0 auto;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+.logo_delta {
+  fill: var(--logo);
+}
+
+.avatar {
+  fill: var(--color-secondary);
+}
+
+/* :root {
   --max-width: 1100px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
@@ -104,4 +159,4 @@ a {
   html {
     color-scheme: dark;
   }
-}
+} */

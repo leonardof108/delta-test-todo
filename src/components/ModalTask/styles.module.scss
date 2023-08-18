@@ -1,0 +1,226 @@
+.modal {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 5%;
+  overflow: auto;
+  transition: all 0.2s ease-in-out;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.open {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal_content {
+  background-color: var(--color-primary);
+  margin: 15% auto;
+  padding-top: min(5%, 3.37rem);
+  padding-left: min(5%, 2.62rem);
+  padding-bottom: min(5%, 2.13rem);
+  padding-right: min(5%, 2.62rem);
+  max-width: 32rem;
+  flex-shrink: 0;
+  position: relative;
+  border-radius: 0.5rem;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.07);
+}
+
+.close {
+  position: absolute;
+  top: 1.13rem;
+  right: 1.12rem;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    filter: var(--hover-brightness);
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.task_container {
+  display: flex;
+  flex-direction: column;
+  h1 {
+    color: var(--font-primary);
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding-bottom: 1.5rem;
+  }
+  p {
+    color: var(--gray-500, #828282);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+
+.task_name_container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.56rem;
+  label {
+    color: var(--font-secondary);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  input {
+    max-width: 100%;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    background: var(--color-secondary);
+    border: none;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      filter: var(--hover-brightness);
+      transition: all 0.2s ease-in-out;
+    }
+  }
+}
+
+.task_description_container {
+  padding-top: 1.87rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.56rem;
+  padding-bottom: 1.69rem;
+  label {
+    color: var(--font-secondary);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  textarea {
+    min-height: 4.25rem;
+    min-width: 100%;
+    max-width: 100%;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    background: var(--color-secondary);
+    border: none;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      filter: var(--hover-brightness);
+      transition: all 0.2s ease-in-out;
+    }
+  }
+}
+
+.task_button_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.69rem;
+}
+
+.task_delete_button {
+  display: inline-flex;
+  padding: var(--16, 1rem) var(--24, 1.5rem);
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.5rem;
+  background: var(--red, #eb5757);
+  &:hover {
+    filter: brightness(95%);
+    transition: all 0.2s ease-in-out;
+  }
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  p {
+    color: #fff;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+}
+
+.task_action_button {
+  display: inline-flex;
+  padding: var(--16, 1rem) var(--24, 1.5rem);
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--blue-300, #2d9cdb);
+  background: var(--blue-300, #2d9cdb);
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    filter: brightness(95%);
+    transition: all 0.2s ease-in-out;
+  }
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  p {
+    color: #fff;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+}
+.task_cancel_button {
+  display: inline-flex;
+  height: 3.25rem;
+  padding: var(--16, 1rem) var(--24, 1.5rem);
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  border: 1px solid var(--black, #1d1d1d);
+  background: #fff;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    filter: brightness(95%);
+    transition: all 0.2s ease-in-out;
+  }
+  p {
+    color: var(--black, #1d1d1d);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+}
+// .textarea_wrapper {
+//   position: relative;
+//   background-color: #f2f2f2;
+//   min-width: 26.75rem;
+//   min-height: 4.25rem;
+//   svg {
+//     position: absolute;
+//     bottom: 0.25rem;
+//     right: 0.31rem;
+//     background: #f2f2f2;
+//     border-radius: 0 0 0.5rem;
+//     pointer-events: none;
+//   }
+// }
