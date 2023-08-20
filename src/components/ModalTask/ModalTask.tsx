@@ -1,4 +1,4 @@
-import { addTask, removeTask } from "@/reducers/taskSlice";
+import { addTask, removeTask, updateTask } from "@/reducers/taskSlice";
 import styles from "./styles.module.scss";
 import { Close, Delete, Plus, Resize } from "@/../public/assets/icons";
 import { TaskTypes } from "@/types/TaskTypes";
@@ -25,14 +25,16 @@ export default function ModalTask({ open, close, id }: modalProps) {
   const [descriptionInput, setDescriptionInput] = useState<string>("");
   const [taskList, setTaskList] = useState<TaskTypes[]>([]);
 
-  console.log(id);
-
   useEffect(() => {
     if (open) {
       const tasksLocalStorage = JSON.parse(
         localStorage.getItem("tasks") || "[]"
       );
       setTaskList(tasksLocalStorage);
+    }
+
+    if (open === "editTask" && taskList.length > 0) {
+      updateShowTask();
     }
   }, [open]);
 
@@ -72,109 +74,41 @@ export default function ModalTask({ open, close, id }: modalProps) {
     close();
   };
 
+  const updateShowTask = () => {
+    const updatedTasks = [...taskList];
+    const taskToUpdate = updatedTasks.find((task) => task.id === id);
+    if (taskToUpdate) {
+      setTitleInput(taskToUpdate.title);
+      setDescriptionInput(taskToUpdate.description);
+    }
+  };
+
+  const handleUpdateTask = () => {
+    const updatedTasks = [...taskList];
+    const taskToUpdateIndex = updatedTasks.findIndex((task) => task.id === id);
+
+    if (taskToUpdateIndex !== -1) {
+      const updatedTaskss = {
+        ...updatedTasks[taskToUpdateIndex],
+        title: titleInput,
+        description: descriptionInput,
+      };
+
+      updatedTasks[taskToUpdateIndex] = updatedTaskss;
+
+      setTaskList(updatedTasks);
+      dispatch(updateTask({ id: id, updatedTask: updatedTaskss }));
+
+      console.log(taskList);
+
+      setTitleInput("");
+      setDescriptionInput("");
+      close();
+    }
+  };
+
   if (!open) {
     return null;
-  }
-
-  let modalContent;
-
-  if (open === "addTask") {
-    modalContent = (
-      <div className={styles.task_container}>
-        <div className={styles.task_container}>
-          <h1>Cadastrar Tarefa</h1>
-          <form className={styles.task_name_container}>
-            <label>Nome da tarefa:</label>
-            <input type="text" onChange={titleChange} />
-          </form>
-          <form className={styles.task_description_container}>
-            <label>Descrição da tarefa:</label>
-            {/* <div className={styles.textarea_wrapper}> */}
-            {/* <Resize /> */}
-            {/* <span className={styles.resizable_input}> */}
-            <textarea onChange={descriptionChange} />
-            {/* </span> */}
-            {/* </div> */}
-          </form>
-          <div className={styles.task_button_container}>
-            <button
-              type="button"
-              className={styles.task_cancel_button}
-              onClick={() => close()}
-            >
-              <p>Cancelar</p>
-            </button>
-            <button
-              type="button"
-              className={styles.task_action_button}
-              onClick={taskSubmit}
-            >
-              <Plus />
-              <p>Adicionar tarefa</p>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  } else if (open === "editTask") {
-    modalContent = (
-      <div className={styles.task_container}>
-        <div className={styles.task_container}>
-          <h1>Editar Tarefa</h1>
-          <form className={styles.task_name_container}>
-            <label>Nome da tarefa:</label>
-            <input type="text" />
-          </form>
-          <form className={styles.task_description_container}>
-            <label>Descrição da tarefa:</label>
-            {/* <div className={styles.textarea_wrapper}> */}
-            {/* <Resize /> */}
-            <textarea />
-            {/* </div> */}
-          </form>
-          <div className={styles.task_button_container}>
-            <button
-              type="button"
-              className={styles.task_cancel_button}
-              onClick={() => close()}
-            >
-              <p>Cancelar</p>
-            </button>
-            <button type="button" className={styles.task_action_button}>
-              <Plus />
-              <p>Finalizar edição</p>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  } else if (open === "deleteTask") {
-    modalContent = (
-      <div className={styles.task_container}>
-        <div className={styles.task_container}>
-          <h1>Excluir Tarefa</h1>
-          <p>Tem certeza que deseja deletar esta tarefa?</p>
-
-          <div className={styles.task_button_container}>
-            <button
-              type="button"
-              className={styles.task_cancel_button}
-              onClick={() => close()}
-            >
-              <p>Cancelar</p>
-            </button>
-            <button
-              type="button"
-              className={styles.task_delete_button}
-              onClick={handleRemoveTask}
-            >
-              <Delete />
-              <p>Deletar</p>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -183,7 +117,84 @@ export default function ModalTask({ open, close, id }: modalProps) {
         <span className={styles.close} onClick={() => close()}>
           <Close />
         </span>
-        {modalContent}
+        <div className={styles.task_container}>
+          <div className={styles.task_container}>
+            {open === "deleteTask" ? (
+              <>
+                <h1>Excluir Tarefa</h1>
+                <p>Tem certeza que deseja deletar esta tarefa?</p>
+
+                <div className={styles.task_button_container}>
+                  <button
+                    type="button"
+                    className={styles.task_cancel_button}
+                    onClick={() => close()}
+                  >
+                    <p>Cancelar</p>
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.task_delete_button}
+                    onClick={handleRemoveTask}
+                  >
+                    <Delete />
+                    <p>Deletar</p>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h1>
+                  {open === "addTask" ? "Cadastrar Tarefa" : "Editar Tarefa"}
+                </h1>
+                <form className={styles.task_name_container}>
+                  <label>Nome da tarefa:</label>
+                  <input
+                    type="text"
+                    value={titleInput}
+                    onChange={titleChange}
+                  />
+                </form>
+                <form className={styles.task_description_container}>
+                  <label>Descrição da tarefa:</label>
+                  <textarea
+                    onChange={descriptionChange}
+                    value={descriptionInput}
+                  />
+                </form>
+                <div className={styles.task_button_container}>
+                  <button
+                    type="button"
+                    className={styles.task_cancel_button}
+                    onClick={() => close()}
+                  >
+                    <p>Cancelar</p>
+                  </button>
+
+                  {open === "addTask" ? (
+                    <button
+                      type="button"
+                      className={styles.task_action_button}
+                      onClick={taskSubmit}
+                    >
+                      <Plus />
+                      <p>Adicionar tarefa</p>
+                    </button>
+                  ) : open === "editTask" ? (
+                    <button
+                      type="button"
+                      className={styles.task_action_button}
+                      onClick={handleUpdateTask}
+                    >
+                      <Plus />
+                      <p>Finalizar edição</p>
+                    </button>
+                  ) : null}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

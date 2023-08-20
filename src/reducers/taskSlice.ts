@@ -11,7 +11,7 @@ const initialState: TaskState = {
 };
 
 const taskSlice = createSlice({
-  name: "ADD_TASK",
+  name: "TASKS",
   initialState,
   reducers: {
     addTask: (state, action: PayloadAction<TaskTypes>) => {
