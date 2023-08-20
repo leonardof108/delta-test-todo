@@ -1,67 +1,73 @@
 import { DeleteTask, EditTask, InputIcon } from "../../../public/assets/icons";
 import ModalTask from "../ModalTask/ModalTask";
 import styles from "./styles.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check } from "../../../public/assets/icons";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { TaskTypes } from "@/types/TaskTypes";
 
-// interface Task {
-//   id: number;
-//   title: string;
-//   description: string;
-// }
+interface modalOpenProps {
+  modalOpen: string;
+  idSelected?: string;
+}
 
 export default function TaskList() {
-  // const [isHovering, setIsHovered] = useState(false);
-  // const onMouseEnter = () => setIsHovered(true);
-  // const onMouseLeave = () => setIsHovered(false);
-  const [openModal, setOpenModal] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const tasksSelector = useSelector((state: RootState) => state.task.tasks);
+  const [openModal, setOpenModal] = useState<modalOpenProps>({
+    modalOpen: "",
+    idSelected: "",
+  });
+  const [tasks, setTasks] = useState<TaskTypes[]>([]);
 
-  // const tasks: Task[] = [
-  //   { id: 1, title: "Task 1", description: "Description 1" },
-  // ];
+  useEffect(() => {
+    const tasksLocalStorage = JSON.parse(localStorage.getItem("tasks") || "[]");
 
-  const handleTaskData = (newTaskData) => {
-    setTasks(newTaskData);
-  };
+    setTasks(tasksLocalStorage);
+  }, [tasksSelector]);
 
   return (
     <>
       <div className={styles.tasks_container}>
         <p>Suas tarefas:</p>
         <ul className={styles.task_list}>
-          {/* {tasks.map((task) => ( */}
-          <li
-            className={
-              `${styles.tasks}`
-              // onMouseEnter={onMouseEnter}
-              // onMouseLeave={onMouseLeave}
-            }
-          >
-            <div className={styles.tasks_left}>
-              <button type="button">
-                <InputIcon />
-              </button>
-              <div>
-                <h3>a</h3>
-                <p>a</p>
+          {tasks.map((task) => (
+            <li key={task.title} className={`${styles.tasks}`}>
+              <div className={styles.tasks_left}>
+                <button type="button">
+                  <InputIcon />
+                </button>
+                <div>
+                  <h3>{task.title}</h3>
+                  <p>{task.description}</p>
+                </div>
               </div>
-            </div>
-            <div
-              // className={`${styles.tasks_right}
-              // ${isHovering ? styles.tasks_actions : ""}
-              //  `}
-              className={`${styles.tasks_right}`}
-            >
-              <button type="button" onClick={() => setOpenModal("editTask")}>
-                <EditTask />
-              </button>
-              <button type="button" onClick={() => setOpenModal("deleteTask")}>
-                <DeleteTask />
-              </button>
-            </div>
-          </li>
-          {/* ))} */}
+              <div className={`${styles.tasks_right}`}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOpenModal({
+                      modalOpen: "editTask",
+                      idSelected: task.id,
+                    })
+                  }
+                >
+                  <EditTask />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOpenModal({
+                      modalOpen: "deleteTask",
+                      idSelected: task.id,
+                    })
+                  }
+                >
+                  <DeleteTask />
+                </button>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
       <div className={styles.finished_tasks_container}>
@@ -81,9 +87,9 @@ export default function TaskList() {
         </ul>
       </div>
       <ModalTask
-        open={openModal}
-        close={() => setOpenModal("")}
-        taskData={handleTaskData}
+        open={openModal.modalOpen}
+        close={() => setOpenModal({ modalOpen: "" })}
+        id={openModal.idSelected}
       />
     </>
   );

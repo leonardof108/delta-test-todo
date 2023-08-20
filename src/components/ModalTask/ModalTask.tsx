@@ -1,5 +1,7 @@
+import { addTask, removeTask } from "@/reducers/taskSlice";
 import styles from "./styles.module.scss";
 import { Close, Delete, Plus, Resize } from "@/../public/assets/icons";
+import { TaskTypes } from "@/types/TaskTypes";
 import {
   ChangeEvent,
   MouseEvent,
@@ -7,44 +9,67 @@ import {
   useState,
   useEffect,
 } from "react";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 interface modalProps {
   open: string;
   close: () => void;
-  taskData: any;
+  id: string;
 }
 
-interface taskListProps {
-  title: string;
-  description: string;
-}
+export default function ModalTask({ open, close, id }: modalProps) {
+  const dispatch = useDispatch();
 
-export default function ModalTask({ open, close, taskData }: modalProps) {
   const [titleInput, setTitleInput] = useState<string>("");
   const [descriptionInput, setDescriptionInput] = useState<string>("");
-  const [taskList, setTaskList] = useState<taskListProps[]>([
-    {
-      title: "",
-      description: "",
-    },
-  ]);
+  const [taskList, setTaskList] = useState<TaskTypes[]>([]);
+
+  console.log(id);
+
+  useEffect(() => {
+    if (open) {
+      const tasksLocalStorage = JSON.parse(
+        localStorage.getItem("tasks") || "[]"
+      );
+      setTaskList(tasksLocalStorage);
+    }
+  }, [open]);
 
   const titleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setTitleInput(e.target.value);
   };
 
-  const descriptionChange = (e: ChangeEventHandler<HTMLTextAreaElement>) => {
+  const descriptionChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     e.preventDefault();
     setDescriptionInput(e.target.value);
   };
 
   const taskSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const newTask = { title: titleInput, description: descriptionInput };
+
+    const id = uuidv4();
+    const newTask: TaskTypes = {
+      id: id,
+      title: titleInput,
+      description: descriptionInput,
+      status: false,
+    };
+
     const updatedTaskList = [...taskList, newTask];
     setTaskList(updatedTaskList);
-    taskData(updatedTaskList);
+    dispatch(addTask(newTask));
+
+    localStorage.setItem("tasks", JSON.stringify(updatedTaskList));
+
+    setTitleInput("");
+    setDescriptionInput("");
+  };
+
+  const handleRemoveTask = () => {
+    dispatch(removeTask(id));
+    close();
   };
 
   if (!open) {
@@ -67,7 +92,7 @@ export default function ModalTask({ open, close, taskData }: modalProps) {
             {/* <div className={styles.textarea_wrapper}> */}
             {/* <Resize /> */}
             {/* <span className={styles.resizable_input}> */}
-            <textarea type="text" onChange={descriptionChange} />
+            <textarea onChange={descriptionChange} />
             {/* </span> */}
             {/* </div> */}
           </form>
@@ -138,7 +163,11 @@ export default function ModalTask({ open, close, taskData }: modalProps) {
             >
               <p>Cancelar</p>
             </button>
-            <button type="button" className={styles.task_delete_button}>
+            <button
+              type="button"
+              className={styles.task_delete_button}
+              onClick={handleRemoveTask}
+            >
               <Delete />
               <p>Deletar</p>
             </button>
