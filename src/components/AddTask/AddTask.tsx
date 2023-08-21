@@ -15,7 +15,11 @@ export default function AddTask() {
           </button>
         </div>
       </div>
-      <ModalTask open={openModal} close={() => setOpenModal("")} />
+      <ModalTask
+        open={openModal}
+        close={() => setOpenModal("")}
+        idSelected={""}
+      />
     </>
   );
 }

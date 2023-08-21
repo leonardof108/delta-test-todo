@@ -5,7 +5,7 @@ import {
   setTasks,
 } from "@/reducers/taskSlice";
 import styles from "./styles.module.scss";
-import { Close, Delete, Plus, Resize } from "@/../public/assets/icons";
+import { Check, Close, Delete, Plus, Resize } from "@/../public/assets/icons";
 import { TaskTypes } from "@/types/TaskTypes";
 import {
   ChangeEvent,
@@ -27,7 +27,7 @@ import {
 interface modalProps {
   open: string;
   close: () => void;
-  idSelected?: string;
+  idSelected: string;
 }
 
 export default function ModalTask({ open, close, idSelected }: modalProps) {
@@ -59,7 +59,6 @@ export default function ModalTask({ open, close, idSelected }: modalProps) {
     setDescriptionInput(e.target.value);
   };
 
-  // Adiciona nova tarefa
   const handleAddTodoList = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newId = uuidv4();
@@ -89,9 +88,15 @@ export default function ModalTask({ open, close, idSelected }: modalProps) {
     }
   };
 
-  // Responsável por editar a tarefa
   const handleEditTask = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    if (titleInput == "") {
+      alert("Por favor digite um nome para a tarefa");
+      return;
+    } else if (descriptionInput == "") {
+      alert("Por favor digite uma descrição para a tarefa");
+      return;
+    }
     const newTask = {
       id: idSelected,
       title: titleInput,
@@ -99,11 +104,10 @@ export default function ModalTask({ open, close, idSelected }: modalProps) {
       status: false,
     };
     editTaskService(idSelected, { ...newTask });
-    dispatch(updateTask(idSelected, { ...newTask }));
+    dispatch(updateTask({ ...newTask }));
     close();
   };
 
-  // Responsável por deletar a tarefa
   const handleRemoveTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     removeTaskService(idSelected);
@@ -190,7 +194,7 @@ export default function ModalTask({ open, close, idSelected }: modalProps) {
                       className={styles.task_action_button}
                       onClick={handleEditTask}
                     >
-                      <Plus />
+                      <Check />
                       <p>Finalizar edição</p>
                     </button>
                   ) : null}

@@ -1,6 +1,5 @@
 import { TaskTypes } from "@/types/TaskTypes";
 
-// Busca no localstorage e retorna as tarefas
 export const getTasks = (): TaskTypes[] => {
   const storageTasks = localStorage.getItem("@tasks");
 
@@ -35,7 +34,10 @@ export const createTask = (task: TaskTypes): string => {
   return task.id;
 };
 
-export const updateTask = (id: string, data: Partial<TaskTypes>): TaskTypes | null => {
+export const updateTask = (
+  id: string,
+  data: Partial<TaskTypes>
+): TaskTypes | null => {
   const storageTasks = localStorage.getItem("@tasks");
 
   if (!storageTasks) {
