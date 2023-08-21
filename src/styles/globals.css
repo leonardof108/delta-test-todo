@@ -12,6 +12,8 @@
   --font-faded: #bdbdbd;
   --logo: #121e3a;
   --hover-brightness: brightness(95%);
+  --hover-highlight: #e0e0e0;
+  --color-actions: #343434;
 }
 
 [data-theme="dark"] {
@@ -24,6 +26,8 @@
   --font-faded: #828282;
   --logo: #ffffff;
   --hover-brightness: brightness(105%);
+  --hover-highlight: #4f4f4f;
+  --color-actions: #ffffff;
 }
 * {
   padding: 0;

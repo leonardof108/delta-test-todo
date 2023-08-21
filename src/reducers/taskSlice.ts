@@ -14,31 +14,64 @@ const taskSlice = createSlice({
   name: "TASKS",
   initialState,
   reducers: {
+    setTasks: (state, action: PayloadAction<TaskTypes[]>) => {
+      return { ...state, tasks: action.payload };
+    },
+
     addTask: (state, action: PayloadAction<TaskTypes>) => {
-      state.tasks.push(action.payload);
-
-      localStorage.setItem("tasks", JSON.stringify(state.tasks));
+      return {
+        ...state,
+        tasks: [...state.tasks, action.payload as TaskTypes],
+      };
     },
+
+    updateTask: (state, action: PayloadAction<TaskTypes>) => {
+      const updatedTasks = state.tasks.map((task) => {
+        if (task.id === action.payload.id) {
+          return {
+            ...task,
+            ...action.payload,
+          };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        tasks: updatedTasks,
+      };
+    },
+
     removeTask: (state, action: PayloadAction<string>) => {
-      const idToRemove = action.payload;
-      state.tasks = state.tasks.filter((task) => task.id !== idToRemove);
-      localStorage.setItem("tasks", JSON.stringify(state.tasks));
-    },
-    updateTask: (
-      state,
-      action: PayloadAction<{ id: string; updatedTask: TaskTypes }>
-    ) => {
-      const { id, updatedTask } = action.payload;
-      const taskIndex = state.tasks.findIndex((task) => task.id === id);
+      const newTasks = state.tasks.filter((task) => task.id !== action.payload.id);
 
-      if (taskIndex !== -1) {
-        state.tasks[taskIndex] = { ...state.tasks[taskIndex], ...updatedTask };
-        localStorage.setItem("tasks", JSON.stringify(state.tasks));
-      }
+      return {
+        ...state,
+        tasks: newTasks,
+      };
+    },
+
+    statusTask: (state, action: PayloadAction<string>) => {
+      const statusTask = state.tasks.map((task) => {
+        if (task.id === action.payload.id) {
+          return {
+            ...task,
+            done: !task.status,
+          };
+        }
+
+        return task;
+      });
+
+      return {
+        ...state,
+        tasks: statusTask,
+      };
     },
   },
 });
 
-export const { addTask, removeTask, updateTask } = taskSlice.actions;
+export const { addTask, removeTask, updateTask, setTasks, statusTask } = taskSlice.actions;
 
 export default taskSlice.reducer;

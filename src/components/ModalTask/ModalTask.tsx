@@ -1,4 +1,9 @@
-import { addTask, removeTask, updateTask } from "@/reducers/taskSlice";
+import {
+  addTask,
+  removeTask,
+  updateTask,
+  setTasks,
+} from "@/reducers/taskSlice";
 import styles from "./styles.module.scss";
 import { Close, Delete, Plus, Resize } from "@/../public/assets/icons";
 import { TaskTypes } from "@/types/TaskTypes";
@@ -9,34 +14,40 @@ import {
   useState,
   useEffect,
 } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import { RootState } from "@/store/store";
+import {
+  createTask,
+  getTasks,
+  removeTask as removeTaskService,
+  updateTask as editTaskService,
+} from "@/services/servicesToDo";
 
 interface modalProps {
   open: string;
   close: () => void;
-  id: string;
+  idSelected: string;
 }
 
-export default function ModalTask({ open, close, id }: modalProps) {
+export default function ModalTask({ open, close, idSelected }: modalProps) {
   const dispatch = useDispatch();
 
   const [titleInput, setTitleInput] = useState<string>("");
   const [descriptionInput, setDescriptionInput] = useState<string>("");
-  const [taskList, setTaskList] = useState<TaskTypes[]>([]);
+  const [taskList, setTaskList] = useState<TaskTypes[]>([
+    {
+      id: "",
+      title: "",
+      description: "",
+      status: false,
+    },
+  ]);
 
   useEffect(() => {
-    if (open) {
-      const tasksLocalStorage = JSON.parse(
-        localStorage.getItem("tasks") || "[]"
-      );
-      setTaskList(tasksLocalStorage);
-    }
-
-    if (open === "editTask" && taskList.length > 0) {
-      updateShowTask();
-    }
-  }, [open]);
+    const tasks = getTasks();
+    dispatch(setTasks(tasks));
+  }, []);
 
   const titleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -48,63 +59,56 @@ export default function ModalTask({ open, close, id }: modalProps) {
     setDescriptionInput(e.target.value);
   };
 
-  const taskSubmit = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  // Adiciona nova tarefa
+  const handleAddTodoList = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newId = uuidv4();
 
-    const id = uuidv4();
-    const newTask: TaskTypes = {
-      id: id,
+    if (titleInput == "") {
+      alert("Por favor digite um nome para a tarefa");
+      return;
+    } else if (descriptionInput == "") {
+      alert("Por favor digite uma descrição para a tarefa");
+      return;
+    }
+
+    const newTask = {
+      id: newId,
       title: titleInput,
       description: descriptionInput,
       status: false,
     };
 
-    const updatedTaskList = [...taskList, newTask];
-    setTaskList(updatedTaskList);
-    dispatch(addTask(newTask));
-
-    localStorage.setItem("tasks", JSON.stringify(updatedTaskList));
-
-    setTitleInput("");
-    setDescriptionInput("");
-  };
-
-  const handleRemoveTask = () => {
-    dispatch(removeTask(id));
-    close();
-  };
-
-  const updateShowTask = () => {
-    const updatedTasks = [...taskList];
-    const taskToUpdate = updatedTasks.find((task) => task.id === id);
-    if (taskToUpdate) {
-      setTitleInput(taskToUpdate.title);
-      setDescriptionInput(taskToUpdate.description);
-    }
-  };
-
-  const handleUpdateTask = () => {
-    const updatedTasks = [...taskList];
-    const taskToUpdateIndex = updatedTasks.findIndex((task) => task.id === id);
-
-    if (taskToUpdateIndex !== -1) {
-      const updatedTaskss = {
-        ...updatedTasks[taskToUpdateIndex],
-        title: titleInput,
-        description: descriptionInput,
-      };
-
-      updatedTasks[taskToUpdateIndex] = updatedTaskss;
-
-      setTaskList(updatedTasks);
-      dispatch(updateTask({ id: id, updatedTask: updatedTaskss }));
-
-      console.log(taskList);
-
+    if (newTask) {
+      setTaskList([...taskList, newTask]);
+      createTask(newTask);
+      dispatch(addTask(newTask));
       setTitleInput("");
       setDescriptionInput("");
       close();
     }
+  };
+
+  // Responsável por editar a tarefa
+  const handleEditTask = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newTask = {
+      id: idSelected,
+      title: titleInput,
+      description: descriptionInput,
+      status: false,
+    };
+    editTaskService(idSelected, { ...newTask });
+    dispatch(updateTask(idSelected, { ...newTask }));
+    close();
+  };
+
+  // Responsável por deletar a tarefa
+  const handleRemoveTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    removeTaskService(idSelected);
+    dispatch(removeTask(idSelected));
+    close();
   };
 
   if (!open) {
@@ -175,7 +179,7 @@ export default function ModalTask({ open, close, id }: modalProps) {
                     <button
                       type="button"
                       className={styles.task_action_button}
-                      onClick={taskSubmit}
+                      onClick={handleAddTodoList}
                     >
                       <Plus />
                       <p>Adicionar tarefa</p>
@@ -184,7 +188,7 @@ export default function ModalTask({ open, close, id }: modalProps) {
                     <button
                       type="button"
                       className={styles.task_action_button}
-                      onClick={handleUpdateTask}
+                      onClick={handleEditTask}
                     >
                       <Plus />
                       <p>Finalizar edição</p>
