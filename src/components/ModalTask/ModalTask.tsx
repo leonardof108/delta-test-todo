@@ -27,7 +27,7 @@ import {
 interface modalProps {
   open: string;
   close: () => void;
-  idSelected: string;
+  idSelected?: string;
 }
 
 export default function ModalTask({ open, close, idSelected }: modalProps) {
