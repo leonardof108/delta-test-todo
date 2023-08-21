@@ -19,6 +19,7 @@ export default function AddTask() {
         open={openModal}
         close={() => setOpenModal("")}
         idSelected={""}
+        setTasks={() => {}}
       />
     </>
   );

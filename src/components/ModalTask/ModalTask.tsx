@@ -23,11 +23,13 @@ import {
   removeTask as removeTaskService,
   updateTask as editTaskService,
 } from "@/services/servicesToDo";
+import { Dispatch, SetStateAction } from "react";
 
 interface modalProps {
   open: string;
   close: () => void;
   idSelected: string;
+  setTasks: Dispatch<SetStateAction<TaskTypes[]>>;
 }
 
 export default function ModalTask({ open, close, idSelected }: modalProps) {

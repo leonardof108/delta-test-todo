@@ -75,7 +75,7 @@ export default function TaskList() {
                     onClick={() =>
                       setOpenModal({
                         modalOpen: "editTask",
-                        idSelected: task.id,
+                        idSelected: task.id || "",
                       })
                     }
                   >
@@ -86,7 +86,7 @@ export default function TaskList() {
                     onClick={() =>
                       setOpenModal({
                         modalOpen: "deleteTask",
-                        idSelected: task.id,
+                        idSelected: task.id || "",
                       })
                     }
                   >
@@ -126,7 +126,7 @@ export default function TaskList() {
                     onClick={() =>
                       setOpenModal({
                         modalOpen: "deleteTask",
-                        idSelected: task.id,
+                        idSelected: task.id || "",
                       })
                     }
                   >
@@ -141,7 +141,7 @@ export default function TaskList() {
       <ModalTask
         open={openModal.modalOpen}
         close={() => setOpenModal({ modalOpen: "" })}
-        idSelected={openModal.idSelected}
+        idSelected={openModal.idSelected || ""}
         setTasks={setTasks}
       />
     </>

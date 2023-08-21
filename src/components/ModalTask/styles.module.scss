@@ -231,15 +231,15 @@
   gap: 0.625rem;
   flex-shrink: 0;
   border-radius: 0.5rem;
-  border: 1px solid var(--black, #1d1d1d);
-  background: #fff;
+  border: 1px solid var(--font-primary);
+  background: var(--color-primary);
   transition: all 0.2s ease-in-out;
   &:hover {
     filter: brightness(95%);
     transition: all 0.2s ease-in-out;
   }
   p {
-    color: var(--black, #1d1d1d);
+    color: var(--font-primary);
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 700;
